@@ -1,6 +1,8 @@
 name: dang-bai
 
 on:
+  schedule:
+    - cron: '*/15 * * * *'
   repository_dispatch:
     types: [dang-bai]
   workflow_dispatch:
