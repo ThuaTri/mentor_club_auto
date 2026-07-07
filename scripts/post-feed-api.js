@@ -31,7 +31,7 @@ const DRY = process.argv.includes('--dry-run');
 if (!DRY && !CFG.APP_SECRET) { console.error('!! Thiếu LARK_APP_SECRET — đặt qua biến môi trường.'); process.exit(1); }
 
 const F = { link:'Link Page', type:'Loại', caption:'Nội dung', comment:'Comment ebook', media:'Ảnh/video',
-            schedule:'Lịch đăng bài', status:'Trạng thái', log:'Log', linkPost:'Link bài đăng' };
+            schedule:'Lịch đăng bài', status:'Trạng thái đăng', log:'Log đăng', linkPost:'Link bài đăng' };
 const DONE = 'Thành công', FAIL = 'Thất bại';
 const now = () => new Date().toISOString().replace('T',' ').slice(0,19);
 const log = (...a) => console.log(now(), ...a);
@@ -177,7 +177,7 @@ function scheduleMs(cell){ if(cell==null)return null; if(typeof cell==='number')
   // map record_id (bảng Pages) -> {fbId, token, name}
   const pageRecs=await listAll(tk, CFG.PAGES_TABLE);
   const pageMap=new Map();
-  for(const r of pageRecs){ pageMap.set(r.record_id, { fbId:plain(r.fields.ID).trim(), token:plain(r.fields.access_token).trim(), name:plain(r.fields.Fanpage).trim() }); }
+  for(const r of pageRecs){ const f=r.fields; pageMap.set(r.record_id, { fbId:plain(f.ID ?? f['FB Page ID']).trim(), token:plain(f.access_token ?? f['GitHub Secret Name']).trim(), name:plain(f.Fanpage ?? f['Tên Page']).trim() }); }
 
   let rows=await listAll(tk, CFG.TABLE_ID);
   // Đăng đúng 1 dòng: truyền record_id qua client_payload -> chỉ xử lý dòng đó.
